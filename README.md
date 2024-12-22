@@ -12,17 +12,35 @@ Tomás Catarino -> 99227
   Python
   
 -Outras Informações :
-  Para teste usamos a utilizadora Trudy no porto 4444, o utilizador Bob no porto 5555 e a utilizadora Alice no porto 6666
-  O porto do servidor SIP é o 5060
-  O porto do servidor de Anuncios SEMS é o 5080
-  O porto do servidor de Conferencias SEMS é no 5090
-  O serviço está todo no 127.0.0.1
+  Para testes, foram utilizados os seguintes utilizadores e portas:
+    Trudy no porto 4444
+    Bob no porto 5555
+    Alice no porto 6666
+  O servidor SIP está no porto 5060.
+  O servidor de anúncios SEMS está no porto 5080.
+  O servidor de conferências SEMS está no porto 5090.
+  Todo o serviço é executado no endereço 127.0.0.1.
   
-  Foi implementado o Registro e as suas devidas respostas SIP para todos os casos
-  Foi implementado as Chamadas e as suas devias respostas SIP para todos os casos
-  Foi implementado o serviço de Anuncios busyann e inconference, para isto foir criado um metodo de verificação se o utilizador chamada está em uma chamada com outro utilizador ou está numa conferencia 
-  Foi implementado o serviço de Conferencia 
-  Foi implementado o serviço de Mensagens onde é verificado se enviado uma mensagem para o URI especial sip:validar@acme.pt com um PIN especifico é valido ou não em termos de segurança 
+-Funcionalidades Implementadas:
+  1.Registo e Respostas SIP:
+    -Foram implementados todos os casos de registo, incluindo as respostas adequadas para cada cenário.
+    
+  2.Chamadas e Respostas SIP
+    -Implementação completa das chamadas entre utilizadores, com as respetivas mensagens SIP.
   
--Pontos incompletos :
-  Foi implementado a verficação da introdução do digito 0 quando o utilizador está no sistema de anuncios inconference e se quer juntar tambem a essa conferencia , mas dá erro 481 e não se consegue juntar
+  3.Serviço de Anúncios (busyann e inconference)
+    -Foi criado um método para verificar se o utilizador chamado está:
+        Já numa chamada com outro utilizador, ou
+        Participar numa conferência.
+  
+  4.Serviço de Conferência
+    -Implementação de conferências SIP.
+  
+  5.Serviço de Mensagens
+    -Foi desenvolvido um sistema para validar mensagens enviadas para o URI especial sip:validar@acme.pt com um PIN específico, garantindo a segurança. 
+
+  
+-Pontos Incompletos
+  Erro na Conferência:
+    Foi implementada a verificação para introduzir o dígito "0" quando o utilizador está no sistema de anúncios inconference e deseja juntar-se à conferência.
+    No entanto, ocorre um erro 481, e o utilizador não consegue entrar na conferência.
