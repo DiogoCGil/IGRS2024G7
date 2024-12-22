@@ -156,20 +156,31 @@ class Kamailio:
 
                     if signal_value == "0":
                         from_address = KSR.pv.get("$fu")
-                        KSR.info(f"Key 0 pressed by {from_address}. Redirecting to conference.\n")             
-                        KSR.rr.record_route()  
-                        KSR.pv.sets("$ru", "sip:conferencia@127.0.0.1:5090")
-                        KSR.forward() 
+                        KSR.info(f"Key 0 pressed by {from_address}. Redirecting to conference.\n")
 
-                        if KSR.tm.t_relay() < 0:  
-                            KSR.err(f"Failed to redirect {from_address} to conference.\n")
+                        if from_address not in self.active_conference:
+                            self.active_conference.append(from_address)
+                        
+                        KSR.info("Preparing reINVITE to join conference.\n")
+                        KSR.rr.record_route()            
+                        KSR.pv.sets("$ru", "sip:conference@127.0.0.1:5090")
+                        KSR.pv.sets("$tu", "sip:conference@127.0.0.1:5090")
+                        
+                        if KSR.tm.t_newtran():  
+                            KSR.info("New INVITE sent successfully.\n")
+                            KSR.tm.t_relay()  
+                        else:
+                            KSR.err("Failed to send new INVITE.\n")
                         return 1
+
                     else:
                         KSR.info("Key pressed is not supported.\n")
-                    break
+                        break
             else:
                 KSR.info("No valid Signal= value found in INFO body.\n")
             return 1
+
+
 
 
         
@@ -194,7 +205,21 @@ class Kamailio:
         
     def ksr_reply_route(self, msg):
         KSR.info("===== response - from Kamailio Python script\n")
-        KSR.info("      Status is:" + str(KSR.pv.get("$rs")) + "\n")
+        status_code = int(KSR.pv.get("$rs"))
+        KSR.info("      Status is:{status_code}\n")
+        
+        if status_code == 486:  
+            from_address = KSR.pv.get("$fu") 
+            to_address = KSR.pv.get("$tu")    
+
+            KSR.info(f"Removing session with From: {from_address} and To: {to_address} from active_sessions due to 486 status.\n")
+            
+            for session_id, participants in list(self.active_sessions.items()):
+                if from_address in participants or to_address in participants:
+                    del self.active_sessions[session_id]
+                    KSR.info(f"Session {session_id} removed.\n")
+                    break
+
         return 1
 
     def ksr_onsend_route(self, msg):
